@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热播影视推荐 - 2026精选</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #a0a0a0;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title.drama { border-color: #ff6b6b; }
+        .section-title.tv { border-color: #feca57; }
+        .section-title.anime { border-color: #48dbfb; }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(72,219,251,0.2));
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .card-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #a0a0a0;
+        }
+
+        .rating {
+            color: #feca57;
+            font-weight: bold;
+        }
+
+        .card-desc {
+            color: #b0b0b0;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .watch-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .watch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,107,107,0.4);
+        }
+
+        .watch-btn.tv { background: linear-gradient(45deg, #feca57, #ff9f43); }
+        .watch-btn.anime { background: linear-gradient(45deg, #48dbfb, #0abde3); }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+
+        .hot {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            .section-title { font-size: 1.4em; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 热播影视推荐</h1>
+            <p>2026年精选 · 紧跟潮流 · 品质推荐</p>
+        </header>
+
+        <!-- 短剧板块 -->
+        <section class="section">
+            <h2 class="section-title drama">🔥 热门短剧</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-image">
+                        🎭
+                        <span class="hot">🔥 热播</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">回到1995</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.2</span>
+                            <span>80集</span>
+                            <span>都市/重生</span>
+                        </div>
+                        <p class="card-desc">意外穿越回1995年，主角利用未来知识改写人生，创业致富的逆袭故事。</p>
+                        <span class="tag">抖音热榜</span>
+                        <span class="tag">重生</span>
+                        <br><br>
+                        <a href="https://www.douyin.com/search/回到1995短剧" target="_blank" class="watch-btn">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        👑
+                        <span class="hot">NEW</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">总裁的替身前妻</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 8.9</span>
+                            <span>100集</span>
+                            <span>言情/都市</span>
+                        </div>
+                        <p class="card-desc">豪门恩怨与爱情纠葛，替身新娘逆袭成为真正的女王。</p>
+                        <span class="tag">快手热播</span>
+                        <span class="tag">甜宠</span>
+                        <br><br>
+                        <a href="https://www.kuaishou.com/search/总裁的替身前妻" target="_blank" class="watch-btn">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        ⚔️
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">龙王归来</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.0</span>
+                            <span>90集</span>
+                            <span>玄幻/都市</span>
+                        </div>
+                        <p class="card-desc">隐忍三年的龙王，一朝归来，震惊整个世界。</p>
+                        <span class="tag">爽剧</span>
+                        <span class="tag">逆袭</span>
+                        <br><br>
+                        <a href="https://www.douyin.com/search/龙王归来短剧" target="_blank" class="watch-btn">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        💕
+                        <span class="hot">🔥 热播</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">闪婚后，傅先生马甲藏不住了</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.1</span>
+                            <span>85集</span>
+                            <span>言情/甜宠</span>
+                        </div>
+                        <p class="card-desc">先婚后爱，霸道总裁的甜蜜追妻之路。</p>
+                        <span class="tag">甜宠</span>
+                        <span class="tag">霸总</span>
+                        <br><br>
+                        <a href="https://www.douyin.com/search/闪婚后傅先生" target="_blank" class="watch-btn">立即观看</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 电视剧板块 -->
+        <section class="section">
+            <h2 class="section-title tv">📺 精品电视剧</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-image">
+                        🏰
+                        <span class="hot">🔥 热播</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">庆余年 第三季</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.5</span>
+                            <span>36集</span>
+                            <span>古装/权谋</span>
+                        </div>
+                        <p class="card-desc">范闲继续在京城的权谋漩涡中周旋，揭开更多惊天秘密。</p>
+                        <span class="tag">腾讯独播</span>
+                        <span class="tag">高分</span>
+                        <br><br>
+                        <a href="https://v.qq.com/detail/q/qingyunian3.html" target="_blank" class="watch-btn tv">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        🌸
+                        <span class="hot">NEW</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">繁花 续章</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.3</span>
+                            <span>30集</span>
+                            <span>年代/商战</span>
+                        </div>
+                        <p class="card-desc">90年代上海的商海浮沉，阿宝的传奇故事继续。</p>
+                        <span class="tag">央视热播</span>
+                        <span class="tag">王家卫</span>
+                        <br><br>
+                        <a href="https://www.cctv.com/program/fanhuaxz/" target="_blank" class="watch-btn tv">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        🔍
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">猎罪图鉴 第二季</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.0</span>
+                            <span>28集</span>
+                            <span>悬疑/犯罪</span>
+                        </div>
+                        <p class="card-desc">模拟画像师与刑警队长联手破获离奇案件。</p>
+                        <span class="tag">爱奇艺</span>
+                        <span class="tag">悬疑</span>
+                        <br><br>
+                        <a href="https://www.iqiyi.com/a_liezuicj2.html" target="_blank" class="watch-btn tv">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        🎪
+                        <span class="hot">🔥 热播</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">漫长的季节 2</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.6</span>
+                            <span>24集</span>
+                            <span>悬疑/生活</span>
+                        </div>
+                        <p class="card-desc">东北小城，跨越二十年的悬疑故事，人性与命运的交织。</p>
+                        <span class="tag">豆瓣高分</span>
+                        <span class="tag">口碑</span>
+                        <br><br>
+                        <a href="https://www.tencent.com/manchangdejijie2" target="_blank" class="watch-btn tv">立即观看</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 动漫板块 -->
+        <section class="section">
+            <h2 class="section-title anime">🎌 精选动漫</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-image">
+                        🐉
+                        <span class="hot">🔥 热播</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">斗破苍穹 年番 第三季</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.1</span>
+                            <span>连载中</span>
+                            <span>玄幻/热血</span>
+                        </div>
+                        <p class="card-desc">萧炎继续修炼之路，挑战更强对手，揭开斗气大陆的秘密。</p>
+                        <span class="tag">腾讯动漫</span>
+                        <span class="tag">国漫</span>
+                        <br><br>
+                        <a href="https://v.qq.com/detail/d/doupocangqiong3.html" target="_blank" class="watch-btn anime">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        ⚔️
+                        <span class="hot">NEW</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">鬼灭之刃 无限城篇</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.7</span>
+                            <span>剧场版</span>
+                            <span>热血/战斗</span>
+                        </div>
+                        <p class="card-desc">炭治郎与鬼杀队成员决战无限城，最终对决即将上演。</p>
+                        <span class="tag">B站引进</span>
+                        <span class="tag">日漫</span>
+                        <br><br>
+                        <a href="https://www.bilibili.com/bangumi/play/gmzr" target="_blank" class="watch-btn anime">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        🌊
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">海贼王 最终章</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.4</span>
+                            <span>连载中</span>
+                            <span>冒险/热血</span>
+                        </div>
+                        <p class="card-desc">路飞一行人向着最终之海进发，ONE PIECE的真相即将揭晓。</p>
+                        <span class="tag">B站同步</span>
+                        <span class="tag">经典</span>
+                        <br><br>
+                        <a href="https://www.bilibili.com/bangumi/play/hzw" target="_blank" class="watch-btn anime">立即观看</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        🎯
+                        <span class="hot">🔥 热播</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">凡人修仙传 星海飞驰</h3>
+                        <div class="card-info">
+                            <span class="rating">⭐ 9.2</span>
+                            <span>连载中</span>
+                            <span>修仙/玄幻</span>
+                        </div>
+                        <p class="card-desc">韩立踏入星海，开启新的修仙征程，面对更强挑战。</p>
+                        <span class="tag">B站独播</span>
+                        <span class="tag">国漫</span>
+                        <br><br>
+                        <a href="https://www.bilibili.com/bangumi/play/fanren" target="_blank" class="watch-btn anime">立即观看</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 热播影视推荐 | 内容来源网络，仅供推荐参考</p>
+            <p>更新时间：2026年3月</p>
+        </footer>
+    </div>
+
+    <script>
+        // 添加简单的动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
