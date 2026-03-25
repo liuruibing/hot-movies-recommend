@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>播放视频</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 15px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 15px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .video-title {
+            font-size: 18px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+
+        .player-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        video {
+            width: 100%;
+            max-height: 100%;
+            outline: none;
+        }
+
+        .error-msg {
+            display: none;
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
+        }
+    </style>
+    <!-- 引入 hls.js -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="history.back()">← 返回</button>
+        <div class="video-title" id="title">正在加载...</div>
+    </div>
+
+    <div class="player-container">
+        <video id="video" controls autoplay></video>
+        <div class="error-msg" id="errorMsg">视频加载失败，请重试或检查链接。</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoUrl = urlParams.get('url');
+            const videoTitle = urlParams.get('title');
+
+            const titleEl = document.getElementById('title');
+            const videoEl = document.getElementById('video');
+            const errorEl = document.getElementById('errorMsg');
+
+            if (videoTitle) {
+                titleEl.textContent = decodeURIComponent(videoTitle);
+                document.title = decodeURIComponent(videoTitle) + " - 播放";
+            } else {
+                titleEl.textContent = "视频播放";
+            }
+
+            if (!videoUrl) {
+                errorEl.style.display = 'block';
+                errorEl.textContent = '未提供视频播放链接。';
+                return;
+            }
+
+            const url = decodeURIComponent(videoUrl);
+
+            // 检查浏览器是否支持 HLS
+            if (Hls.isSupported()) {
+                const hls = new Hls({
+                    debug: false,
+                    // 可以添加一些容错配置
+                    fragLoadingTimeOut: 20000,
+                    manifestLoadingTimeOut: 20000
+                });
+                hls.loadSource(url);
+                hls.attachMedia(videoEl);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    videoEl.play().catch(e => console.log("Auto-play prevented", e));
+                });
+
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.error("网络错误");
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.error("媒体错误");
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                hls.destroy();
+                                errorEl.style.display = 'block';
+                                break;
+                        }
+                    }
+                });
+            }
+            // 对于 Safari 浏览器，原生支持 m3u8
+            else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+                videoEl.src = url;
+                videoEl.addEventListener('loadedmetadata', function() {
+                    videoEl.play().catch(e => console.log("Auto-play prevented", e));
+                });
+                videoEl.addEventListener('error', function() {
+                    errorEl.style.display = 'block';
+                });
+            } else {
+                errorEl.style.display = 'block';
+                errorEl.textContent = '您的浏览器不支持 HLS 视频播放，请更换浏览器。';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+fetch("https://cj.lziapi.com/api.php/provide/vod/?ac=detail&t=46&pg=1", {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json'
+    }
+})
+  .then(response => response.json())
+  .then(data => document.body.innerHTML += "SUCCESS: " + data.list.length)
+  .catch(error => document.body.innerHTML += "ERROR: " + error);
+</script>
+</body>
+</html>

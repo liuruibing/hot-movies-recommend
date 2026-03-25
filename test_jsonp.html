@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://cj.lziapi.com/api.php/provide/vod/?ac=detail&t=46&pg=1"))
+  .then(response => {
+    if (response.ok) return response.json()
+    throw new Error('Network response was not ok.')
+  })
+  .then(data => {
+    const jsonStr = data.contents;
+    const parsedData = JSON.parse(jsonStr);
+    document.body.innerHTML += "SUCCESS: " + parsedData.list.length;
+  })
+  .catch(error => document.body.innerHTML += "ERROR: " + error);
+</script>
+</body>
+</html>
