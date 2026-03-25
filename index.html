@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>热播影视推荐 - 2026精选</title>
     <style>
         * {
@@ -12,46 +13,51 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d0f12;
             min-height: 100vh;
             color: #f8fafc;
+            /* Modern, dark app-like background with subtle glow */
+            background-image:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0, transparent 50%);
             background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 20px 16px 60px;
         }
 
         header {
             text-align: center;
-            padding: 50px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 24px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
             margin-bottom: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         header h1 {
-            font-size: 3em;
-            font-weight: 800;
-            background: linear-gradient(to right, #ec4899, #8b5cf6, #3b82f6);
+            font-size: 2.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 15px;
-            letter-spacing: -1px;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
         }
 
         header p {
             color: #94a3b8;
-            font-size: 1.2em;
-            font-weight: 300;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         .section {
@@ -59,62 +65,81 @@
         }
 
         .section-title {
-            font-size: 2em;
-            font-weight: 700;
-            margin-bottom: 25px;
-            padding-left: 15px;
-            border-left: 5px solid;
+            font-size: 1.6em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            padding-left: 0;
+            border-left: none;
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            gap: 10px;
         }
 
-        .section-title.drama { border-color: #ec4899; color: #fbcfe8; }
-        .section-title.tv { border-color: #f59e0b; color: #fef3c7; }
-        .section-title.anime { border-color: #06b6d4; color: #cffafe; }
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .section-title.drama::before { background: linear-gradient(to bottom, #ec4899, #f43f5e); }
+        .section-title.tv::before { background: linear-gradient(to bottom, #f59e0b, #fbbf24); }
+        .section-title.anime::before { background: linear-gradient(to bottom, #06b6d4, #38bdf8); }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 20px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .card-image {
             width: 100%;
-            height: 200px;
-            background-color: #0f172a;
+            padding-top: 140%; /* Cinematic portrait ratio */
+            background-color: #1e293b;
             position: relative;
             overflow: hidden;
         }
 
         .card-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .card:hover .card-image img {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
         .card-image::after {
@@ -123,23 +148,32 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 50%;
-            background: linear-gradient(to top, rgba(30, 41, 59, 1), transparent);
+            height: 60%;
+            background: linear-gradient(to top, rgba(13, 15, 18, 1) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .card-content {
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+            position: relative;
+            z-index: 2;
+            margin-top: -30px; /* Pull text over the gradient */
         }
 
         .card-title {
-            font-size: 1.25em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #f8fafc;
+            font-size: 1.1em;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #ffffff;
             line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -148,76 +182,89 @@
 
         .card-info {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 12px;
-            font-size: 0.85em;
-            color: #94a3b8;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            font-weight: 500;
         }
 
         .rating {
             color: #fbbf24;
-            font-weight: 700;
-            background: rgba(251, 191, 36, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0,0,0,0.4);
+            padding: 3px 8px;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+
+        .tags {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.2);
             padding: 2px 8px;
-            border-radius: 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #a5b4fc;
+            font-weight: 600;
         }
 
         .card-desc {
-            color: #cbd5e1;
-            font-size: 0.9em;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            flex-grow: 1;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 16px;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            flex-grow: 1;
+            line-height: 1.5;
         }
 
         .watch-btn {
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
             width: 100%;
-            text-align: center;
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #ec4899, #be185d);
-            color: #fff;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
             text-decoration: none;
             border-radius: 12px;
-            font-weight: 700;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            margin-top: auto;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .watch-btn::before {
+            content: '▶';
+            font-size: 0.8rem;
         }
 
         .watch-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.5);
+            background: #ffffff;
+            color: #0d0f12;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
-        .watch-btn.tv {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-        .watch-btn.tv:hover { box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5); }
+        .watch-btn.tv { border-color: rgba(245, 158, 11, 0.3); color: #fcd34d; }
+        .watch-btn.tv:hover { background: #fcd34d; color: #0d0f12; }
 
-        .watch-btn.anime {
-            background: linear-gradient(135deg, #06b6d4, #0369a1);
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
-        }
-        .watch-btn.anime:hover { box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5); }
-
-        .tag {
-            display: inline-block;
-            padding: 4px 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            font-size: 0.75em;
-            margin-right: 6px;
-            margin-bottom: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
+        .watch-btn.anime { border-color: rgba(6, 182, 212, 0.3); color: #67e8f9; }
+        .watch-btn.anime:hover { background: #67e8f9; color: #0d0f12; }
 
         .hot {
             position: absolute;
@@ -235,23 +282,25 @@
         }
 
         /* 骨架屏加载动画 */
+        .skeleton .card-img-wrapper { background: rgba(255,255,255,0.05); }
+        .skeleton .card-info { margin-top: 0; padding-top: 20px; }
+
         .skeleton {
             animation: skeleton-loading 1s linear infinite alternate;
         }
 
         @keyframes skeleton-loading {
             0% {
-                background-color: rgba(255, 255, 255, 0.05);
+                background-color: rgba(255, 255, 255, 0.03);
             }
             100% {
-                background-color: rgba(255, 255, 255, 0.15);
+                background-color: rgba(255, 255, 255, 0.08);
             }
         }
 
         .skeleton-img {
             width: 100%;
-            height: 200px;
-            border-radius: 20px 20px 0 0;
+            padding-top: 140%;
         }
 
         .skeleton-text {
@@ -335,14 +384,15 @@
         // 创建骨架屏
         function createSkeleton() {
             return `
-                <div class="card">
-                    <div class="skeleton skeleton-img"></div>
-                    <div class="card-content">
-                        <div class="skeleton skeleton-text" style="width: 80%;"></div>
-                        <div class="skeleton skeleton-text" style="width: 50%; margin-bottom: 20px;"></div>
+                <div class="card skeleton">
+                    <div class="card-img-wrapper skeleton-img"></div>
+                    <div class="card-content card-info">
+                        <div class="skeleton skeleton-text" style="width: 80%; height: 24px;"></div>
+                        <div class="skeleton skeleton-text" style="width: 40%; height: 16px; margin-bottom: 16px;"></div>
                         <div class="skeleton skeleton-text" style="width: 100%;"></div>
-                        <div class="skeleton skeleton-text" style="width: 100%;"></div>
-                        <div class="skeleton skeleton-btn"></div>
+                        <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                        <div class="skeleton skeleton-text" style="width: 70%; margin-bottom: 20px;"></div>
+                        <div class="skeleton skeleton-btn" style="height: 44px; border-radius: 12px; margin-top: auto;"></div>
                     </div>
                 </div>
             `;
@@ -395,18 +445,18 @@
 
                 const cardHtml = `
                     <div class="card" style="opacity: 0; transform: translateY(20px);">
-                        <div class="card-image">
-                            <img src="${imgUrl}" alt="${movie.vod_name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100%\\' height=\\'100%\\' viewBox=\\'0 0 400 300\\'><rect fill=\\'%231e293b\\' width=\\'400\\' height=\\'300\\'/><text fill=\\'%2394a3b8\\' font-family=\\'sans-serif\\' font-size=\\'20\\' dy=\\'10.5\\' font-weight=\\'bold\\' x=\\'50%\\' y=\\'50%\\' text-anchor=\\'middle\\'>加载失败</text></svg>'">
+                        <div class="card-img-wrapper">
+                            <img class="card-img" src="${imgUrl}" alt="${movie.vod_name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100%\\' height=\\'100%\\' viewBox=\\'0 0 400 300\\'><rect fill=\\'%231e293b\\' width=\\'400\\' height=\\'300\\'/><text fill=\\'%2394a3b8\\' font-family=\\'sans-serif\\' font-size=\\'20\\' dy=\\'10.5\\' font-weight=\\'bold\\' x=\\'50%\\' y=\\'50%\\' text-anchor=\\'middle\\'>加载失败</text></svg>'">
                             ${isHot}
                         </div>
                         <div class="card-content">
                             <h3 class="card-title">${movie.vod_name}</h3>
                             <div class="card-info">
-                                <span class="rating">⭐ ${movie.vod_score || '暂无评分'}</span>
+                                <span class="rating">⭐ ${movie.vod_score || '暂评'}</span>
                                 <span>${movie.vod_remarks || ''}</span>
                             </div>
-                            <div style="margin-bottom: 10px;">${tagsHtml}</div>
-                            <p class="card-desc">${(movie.vod_blurb || movie.vod_content || '暂无简介').replace(/<[^>]+>/g, '')}</p>
+                            <div class="tags">${tagsHtml}</div>
+                            <p class="card-desc">${(movie.vod_blurb || movie.vod_content || '暂无简介').replace(/<[^>]+>/g, '').substring(0, 60)}...</p>
                             <a href="${playLink}" class="watch-btn ${btnClass}">立即观看</a>
                         </div>
                     </div>

@@ -12,6 +12,30 @@ class ProxyHTTPRequestHandler(SimpleHTTPRequestHandler):
 
             if 'url' in params:
                 target_url = params['url'][0]
+
+                # Prevent SSRF: only allow requests to our specific API provider
+                parsed_url = urllib.parse.urlparse(target_url)
+                if parsed_url.netloc != 'cj.lziapi.com':
+                    self.send_response(403)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    self.wfile.write(b'{"error": "Forbidden: Invalid domain"}')
+                    return
+
+                # Reconstruct any additional query parameters passed to the proxy
+                additional_params = {k: v[0] for k, v in params.items() if k != 'url'}
+                if additional_params:
+                    # Parse the original target URL
+                    url_parts = list(urllib.parse.urlparse(target_url))
+                    # Parse its existing query string
+                    target_query = dict(urllib.parse.parse_qsl(url_parts[4]))
+                    # Update with additional parameters
+                    target_query.update(additional_params)
+                    # Rebuild the query string and the target URL
+                    url_parts[4] = urllib.parse.urlencode(target_query)
+                    target_url = urllib.parse.urlunparse(url_parts)
+
                 try:
                     req = urllib.request.Request(target_url, headers={'User-Agent': 'Mozilla/5.0'})
                     with urllib.request.urlopen(req) as response:
