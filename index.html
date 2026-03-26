@@ -562,7 +562,7 @@
                             </div>
                             <div class="tags">${tagsHtml}</div>
                             <p class="card-desc" title="${(movie.vod_blurb || movie.vod_content || '暂无简介').replace(/<[^>]+>/g, '')}">${(movie.vod_blurb || movie.vod_content || '暂无简介').replace(/<[^>]+>/g, '').substring(0, 60)}...</p>
-                            <a href="${playLink}" class="watch-btn ${btnClass}" ${btnAttrs} ${!hasValidUrl ? 'onclick="alert(\\'该视频暂不可播放，请选择其他影片\\'); return false;"' : ''}>${btnText}</a>
+                            <a href="${playLink}" class="watch-btn ${btnClass}" ${btnAttrs} ${!hasValidUrl ? 'onclick=\'alert("该视频暂不可播放，请选择其他影片"); return false;\'' : ''}>${btnText}</a>
                         </div>
                     </div>
                 `;
